@@ -1,5 +1,9 @@
 # NextWordPrediction
 
+## Overview
+
+![image](https://github.com/user-attachments/assets/1516d07f-d1c8-4e9c-95a0-32980e18647a)
+
 This is a simple project to predict the next word in a sentence using  Long Short-Term Memory (LSTM) cells. The model is trained on a corpus of text data and then used to predict the next word in a sentence.
 
 
@@ -43,3 +47,6 @@ python app.py
 ```
 
 4. Open the browser and go to http://127.0.0.1:5000/
+
+
+
