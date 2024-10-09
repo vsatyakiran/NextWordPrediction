@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Word Prediction</title>
+    <style>
+        
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            font-family: Arial, sans-serif;
+            background-color: #090909;
+        }
+        .container {
+            margin: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            h1{
+                color: white;
+                font-size: 50px;
+                span{
+                    color: rgb(249, 153, 10);
+                    text-shadow: 0 2px 2px #b9b9b9, 0 0 2px #e1e1e1;
+                }
+            }
+        }
+        .input{
+            margin-top: 50px;
+            label{
+                color: white;
+            }
+            input {
+                padding: 8px;
+                margin: 8px 0;
+                width: 500px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                outline: none;
+            }
+
+        }
+        .suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            width: 500px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: blue;
+        }
+
+        .suggestions::-webkit-scrollbar {
+            width: 0;  /* Remove scrollbar space */
+            background: transparent;  /* Optional: Make scrollbar invisible */
+        }
+        .suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .suggestions div:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="container">
+        <h1><span>Next Word</span> Prediction</h1>
+        <div class="input">
+            <!-- <label for="text">Enter Text:</label> -->
+            <input type="text" id="text" name="text" onkeyup="getSuggestions(this.value)" autocomplete="off">
+        </div>
+        <div id="suggestions" class="suggestions"></div>
+    </div>
+
+    <script>
+        function getSuggestions(inputText) {
+            if (inputText.length == 0) {
+                document.getElementById('suggestions').innerHTML = '';
+                return;
+            }
+            fetch('/suggest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: inputText }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let suggestionsDiv = document.getElementById('suggestions');
+                    suggestionsDiv.innerHTML = '';
+                    data.suggestions.forEach(word => {
+                        let suggestionItem = document.createElement('div');
+                        suggestionItem.textContent = word;
+                        suggestionItem.onclick = function () {
+                            document.getElementById('text').value = inputText + ' ' + word;
+                            suggestionsDiv.innerHTML = '';
+                        };
+                        suggestionsDiv.appendChild(suggestionItem);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+
+</html>
